@@ -64,11 +64,11 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      * [TextureView].
      */
 
+    //pvHandler : thread2에서 person을 읽고 string화 하면, 그거를 textview에 표시 할때 쓰려고 함
+    lateinit var pvHandler : PreviewHandler
     var thread2 : ThreadClass? = null
     var isThread2Work : Boolean = false
     var previewPersonMessage : String? = null
-    var previewPerson : Person? = null
-
 
     private val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
 
@@ -82,7 +82,9 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
 
         override fun onSurfaceTextureDestroyed(texture: SurfaceTexture) = true
 
-        override fun onSurfaceTextureUpdated(texture: SurfaceTexture) = Unit
+        override fun onSurfaceTextureUpdated(texture: SurfaceTexture){
+
+        }
 
     }
 
@@ -264,6 +266,8 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
         view.findViewById<View>(R.id.picture).setOnClickListener(this)
         view.findViewById<View>(R.id.info).setOnClickListener(this)
         textureView = view.findViewById(R.id.texture)
+        textView = view.findViewById(R.id.textView)
+        pvHandler = PreviewHandler()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -780,6 +784,8 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
 
     companion object {
 
+        lateinit var textView : TextView
+
         /**
          * Conversion from screen rotation to JPEG orientation.
          */
@@ -991,17 +997,23 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
                         val processedImage = processImage(sampleBitmap, true) // 전처리 해주고
                         val posenet = Posenet(this@Camera2BasicFragment.context) // 모델 인스턴스 만들고
                         val person = posenet.estimateSinglePose(processedImage) // 추측을 해본다
-                        previewPerson = person
                         previewPersonMessage =
+                            "점수 ${person.score}\n"+
                             "코오 ${person.keyPoints[0].position.x},${person.keyPoints[0].position.y}\n"+
                             "좌눈 ${person.keyPoints[1].position.x},${person.keyPoints[1].position.y}\n"+
                             "우눈 ${person.keyPoints[2].position.x},${person.keyPoints[2].position.y}\n"+
                             "좌귀 ${person.keyPoints[3].position.x},${person.keyPoints[3].position.y}\n"+
                             "우귀 ${person.keyPoints[4].position.x},${person.keyPoints[4].position.y}\n"
                         when(person.score){
-                            in 0.3..1.0 -> Log.d("thread2",previewPersonMessage)
+                            in 0.3..1.0 -> {
+                                Log.d("thread2",previewPersonMessage)
+                            }
                             else -> Log.d("thread2","인식불가 : ${person.score}")
                         }
+                        //텍뷰에 메시지 뽈롱
+                        var msg = pvHandler.obtainMessage()
+                        msg.obj = previewPersonMessage
+                        pvHandler.sendMessage(msg)
                     }
                 }
                 catch (e:Exception){
@@ -1010,4 +1022,5 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
             }
         }
     }
+
 }
