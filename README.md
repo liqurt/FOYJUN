@@ -2,6 +2,8 @@ I refer to  Android Camera2Basic Sample and TensorFlow Lite PoseNet Android Demo
 
 Goal is making synthesized picture like SNOW, running tflite model in Android
 
+Cause I am a student, focusing to study something and that's Kotlin
+
 please checkout my blog for further information(https://blog.naver.com/liqurt)
 
 [Screenshot]
