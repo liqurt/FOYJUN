@@ -17,7 +17,6 @@
 package com.example.android.foyjun
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -44,10 +43,11 @@ import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.ImageButton
 import android.widget.TextView
-import kotlinx.android.synthetic.*
+import android.widget.Toast
 import java.io.File
+import java.io.FileOutputStream
 import java.lang.Exception
 import java.util.Arrays
 import java.util.Collections
@@ -65,10 +65,15 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      */
 
     //pvHandler : thread2에서 person을 읽고 string화 하면, 그거를 textview에 표시 할때 쓰려고 함
-    lateinit var pvHandler : PreviewHandler
-    var thread2 : ThreadClass? = null
-    var isThread2Work : Boolean = false
+    lateinit var sunglassesButton: ImageButton
+    lateinit var mustacheButton: ImageButton
+    lateinit var previewHandler : PreviewHandler
+    var previewInferenceThread : ThreadClass? = null
+    var isPIThreadWork : Boolean = false
     var previewPersonMessage : String? = null
+    var isSunglasses : Boolean = false
+    var isMustache : Boolean = false
+
 
     private val surfaceTextureListener = object : TextureView.SurfaceTextureListener {
 
@@ -155,6 +160,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      * This is the output file for our picture.
      */
     private lateinit var file: File
+    private lateinit var stampedFile: File
 
     /**
      * This a callback object for the [ImageReader]. "onImageAvailable" will be called when a
@@ -262,22 +268,40 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
     ): View? = inflater.inflate(R.layout.fragment_camera2_basic, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        logNyan()
+        lognyan()
         view.findViewById<View>(R.id.picture).setOnClickListener(this)
-        view.findViewById<View>(R.id.info).setOnClickListener(this)
         textureView = view.findViewById(R.id.texture)
         textView = view.findViewById(R.id.textView)
-        pvHandler = PreviewHandler()
+        sunglassesButton = view.findViewById(R.id.sunglasses)
+        mustacheButton = view.findViewById(R.id.mustache)
+        sunglassesButton.setOnClickListener {
+            when(isSunglasses){
+                false->isSunglasses=true
+                true->isSunglasses=false
+            }
+            Toast.makeText(this.context,"isSunglasses : $isSunglasses",Toast.LENGTH_SHORT).show()
+            Log.d("tag","isSunglasses : $isSunglasses")
+        }
+        mustacheButton.setOnClickListener {
+            when(isMustache){
+                false->isMustache=true
+                true->isMustache=false
+            }
+            Toast.makeText(this.context,"isMustache : $isMustache",Toast.LENGTH_SHORT).show()
+            Log.d("tag","isMustache : $isMustache")
+        }
+        previewHandler = PreviewHandler()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        logNyan()
+        lognyan()
         super.onActivityCreated(savedInstanceState)
         file = File(activity.getExternalFilesDir(null), PIC_FILE_NAME)
+        stampedFile = File(activity.getExternalFilesDir(null), PIC_FILE_NAME2)
     }
 
     override fun onResume() {
-        logNyan()
+        lognyan()
         super.onResume()
         startBackgroundThread()
 
@@ -294,14 +318,14 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
 
 
     override fun onPause() {
-        logNyan()
+        lognyan()
         closeCamera()
         stopBackgroundThread()
         super.onPause()
     }
 
     private fun requestCameraPermission() {
-        logNyan()
+        lognyan()
         if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
             ConfirmationDialog().show(childFragmentManager, FRAGMENT_DIALOG)
         } else {
@@ -310,7 +334,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
     }
 
     private fun requestReadExternalStoragePermission() {
-        logNyan()
+        lognyan()
         if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             ConfirmationDialog().show(childFragmentManager, FRAGMENT_DIALOG)
         } else {
@@ -319,7 +343,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
     }
 
     private fun requestWriteExternalStoragePermission() {
-        logNyan()
+        lognyan()
         if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             ConfirmationDialog().show(childFragmentManager, FRAGMENT_DIALOG)
         } else {
@@ -330,7 +354,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>,
                                             grantResults: IntArray) {
-        logNyan()
+        lognyan()
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults.size != 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 ErrorDialog.newInstance(getString(R.string.request_permission))
@@ -358,7 +382,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      * @param height The height of available size for camera preview
      */
     private fun setUpCameraOutputs(width: Int, height: Int) {
-        logNyan()
+        lognyan()
         val manager = activity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
             for (cameraId in manager.cameraIdList) {
@@ -444,7 +468,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      * @return true if the dimensions are swapped, false otherwise.
      */
     private fun areDimensionsSwapped(displayRotation: Int): Boolean {
-        logNyan()
+        lognyan()
         var swappedDimensions = false
         when (displayRotation) {
             Surface.ROTATION_0, Surface.ROTATION_180 -> {
@@ -470,7 +494,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
     private fun openCamera(width: Int, height: Int) {
 
         Log.d("tag", "from openCamera(W,H) : ${width} , ${height}")
-        logNyan()
+        lognyan()
         val permission = ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
         if (permission != PackageManager.PERMISSION_GRANTED) {
             requestCameraPermission()
@@ -508,7 +532,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      * Closes the current [CameraDevice].
      */
     private fun closeCamera() {
-        logNyan()
+        lognyan()
         try {
             cameraOpenCloseLock.acquire()
             captureSession?.close()
@@ -529,11 +553,11 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      */
     //여기서 쓰레드를 만들까
     private fun startBackgroundThread() {
-        logNyan()
+        lognyan()
         backgroundThread = HandlerThread("CameraBackground").also { it.start() }
         backgroundHandler = Handler(backgroundThread?.looper)
-        thread2 = ThreadClass().also { it.start() }
-        isThread2Work = true
+        previewInferenceThread = ThreadClass().also { it.start() }
+        isPIThreadWork = true
     }
 
     /**
@@ -541,13 +565,13 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      */
     // 여기서 죽여버리고
     private fun stopBackgroundThread() {
-        logNyan()
+        lognyan()
         backgroundThread?.quitSafely()
         try {
             backgroundThread?.join()
             backgroundThread = null
             backgroundHandler = null
-            isThread2Work = false
+            isPIThreadWork = false
         } catch (e: InterruptedException) {
             Log.e(TAG, e.toString())
         }
@@ -557,7 +581,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      * Creates a new [CameraCaptureSession] for camera preview.
      */
     private fun createCameraPreviewSession() {
-        logNyan()
+        lognyan()
         try {
             val texture = textureView.surfaceTexture
 
@@ -617,7 +641,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      * @param viewHeight The height of `textureView`
      */
     private fun configureTransform(viewWidth: Int, viewHeight: Int) {
-        logNyan()
+        lognyan()
         activity ?: return
         val rotation = activity.windowManager.defaultDisplay.rotation
         val matrix = Matrix()
@@ -646,7 +670,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      * Lock the focus as the first step for a still image capture.
      */
     private fun lockFocus() {
-        logNyan()
+        lognyan()
         try {
             // This is how to tell the camera to lock focus.
             previewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
@@ -666,7 +690,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      * we get a response in [.captureCallback] from [.lockFocus].
      */
     private fun runPrecaptureSequence() {
-        logNyan()
+        lognyan()
         try {
             // This is how to tell the camera to trigger.
             previewRequestBuilder.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
@@ -686,7 +710,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
      * [.captureCallback] from both [.lockFocus].
      */
     private fun captureStillPicture() {
-        logNyan()
+        lognyan()
         try {
             if (activity == null || cameraDevice == null) return
             val rotation = activity.windowManager.defaultDisplay.rotation
@@ -714,11 +738,36 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
                                                 request: CaptureRequest,
                                                 result: TotalCaptureResult) {
                     activity.showToast("Saved: $file")
+//여기서 이미 파일이 만들어졋음.
 
-                    //posenet
-                    var bitbitbit: Bitmap? = file2Bitmap()
-                    bitbitbit = Bitmap.createScaledBitmap(bitbitbit!!, 480, 640, false)
-                    processImage(bitbitbit)
+                    //그 파일로 PoseNet돌림
+                    val bitmappedFile: Bitmap? = file2Bitmap()
+                    val scaledBitmap_file = Bitmap.createScaledBitmap(bitmappedFile!!, 480, 640, false)
+                    val scaledBitmap_stamps = Bitmap.createScaledBitmap(bitmappedFile!!, 480, 640, false)
+                    val personFromFile = processImage(scaledBitmap_file)
+
+                    val fileCanvas = Canvas(scaledBitmap_stamps)
+                    val stampCanvas = drawStampsOnCanvas(scaledBitmap_file,fileCanvas, personFromFile) // 드디어 됐다.
+
+
+                    //비트맵 -> 파일 with scaledBitmap_stamps
+                    val fileCacheItem = File(stampedFile.path)
+                    var outputStream : FileOutputStream? = null
+                    try{
+                        fileCacheItem.createNewFile()
+                        outputStream = FileOutputStream(fileCacheItem)
+                        scaledBitmap_stamps.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                    }catch (e : Exception){
+                        Log.d("tag","$e")
+                    }finally {
+                        try{
+                            if(outputStream != null){
+                                outputStream.close()
+                            }
+                        }catch(e : Exception){
+                            Log.d("tag","$e")
+                        }
+                    }
 
                     Log.d(TAG, file.toString())
                     unlockFocus()
@@ -736,12 +785,79 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
 
     }
 
+    private fun drawStampsOnCanvas(bitmap : Bitmap, canvas: Canvas, person : Person) : Canvas {
+        val sunglassBitmap : Bitmap = BitmapFactory.decodeResource(resources, R.drawable.sunglasses)
+        val mustacheBitmap : Bitmap = BitmapFactory.decodeResource(resources, R.drawable.mustache)
+
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+        // Draw `bitmap` and `person` in square canvas.
+        val screenWidth: Int
+        val screenHeight: Int
+        val left: Int
+        val right: Int
+        val top: Int
+        val bottom: Int
+        if (canvas.height > canvas.width) {
+            screenWidth = canvas.width
+            screenHeight = canvas.width
+            left = 0
+            top = (canvas.height - canvas.width) / 2
+        } else {
+            screenWidth = canvas.height
+            screenHeight = canvas.height
+            left = (canvas.width - canvas.height) / 2
+            top = 0
+        }
+        right = left + screenWidth
+        bottom = top + screenHeight
+
+        val widthRatio = screenWidth.toFloat() / 257
+        val heightRatio = screenHeight.toFloat() / 257
+
+        //EYES position
+        val leftEyeX: Float = person.keyPoints[1].position.x.toFloat() * widthRatio + left
+        val leftEyeY: Float = person.keyPoints[1].position.y.toFloat() * heightRatio + top
+        val rightEyeX: Float = person.keyPoints[2].position.x.toFloat() * widthRatio + left
+        val rightEyeY: Float = person.keyPoints[2].position.y.toFloat() * heightRatio + top
+
+        //EARS position
+        val leftEarX: Float = person.keyPoints[3].position.x.toFloat() * widthRatio + left
+        val leftEarY: Float = person.keyPoints[3].position.y.toFloat() * heightRatio + top
+        val rightEarX: Float = person.keyPoints[4].position.x.toFloat() * widthRatio + left
+        val rightEarY: Float = person.keyPoints[4].position.y.toFloat() * heightRatio + top
+
+        //NOSE position
+        val noseX: Float = person.keyPoints[0].position.x.toFloat() * widthRatio + left
+        val noseY: Float = person.keyPoints[0].position.y.toFloat() * heightRatio + top
+
+        //Resizing bitmap - sunglasses
+        val new_w : Int = (sunglassBitmap.width* (leftEarX-rightEarX) / sunglassBitmap.width).toInt()
+        val new_h : Int = (sunglassBitmap.height * (leftEarX-rightEarX) / sunglassBitmap.height).toInt()
+        val resizedBitmap = Bitmap.createScaledBitmap(sunglassBitmap, new_w, new_h, true)
+
+        //Resizing bitmap - mustache
+        val new2_w : Int = (mustacheBitmap.width * (leftEyeX-rightEyeX) / mustacheBitmap.width).toInt()
+        val new2_h : Int = (mustacheBitmap.height * (leftEyeX-rightEyeX) / mustacheBitmap.height).toInt()
+        val resized2Bitmap = Bitmap.createScaledBitmap(mustacheBitmap, new2_w, new2_h, true)
+
+        canvas.drawBitmap(bitmap,0.0f,0.0f,null)
+
+        Log.d("tag","isSunglassses : $isSunglasses, isMustache : $isMustache")
+        if(isSunglasses){
+            canvas.drawBitmap(resizedBitmap, rightEarX, rightEyeY - new_h/2, null)
+        }
+        if(isMustache){
+            canvas.drawBitmap(resized2Bitmap, rightEyeX, noseY, null)
+        }
+        return canvas
+    }
+
     /**
      * Unlock the focus. This method should be called when still image capture sequence is
      * finished.
      */
     private fun unlockFocus() {
-        logNyan()
+        lognyan()
         try {
             // Reset the auto-focus trigger
             previewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
@@ -760,22 +876,14 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
     }
 
     override fun onClick(view: View) {
-        logNyan()
+        lognyan()
         when (view.id) {
             R.id.picture -> lockFocus()
-            R.id.info -> {
-                if (activity != null) {
-                    AlertDialog.Builder(activity)
-                            .setMessage(R.string.intro_message)
-                            .setPositiveButton(android.R.string.ok, null)
-                            .show()
-                }
-            }
         }
     }
 
     private fun setAutoFlash(requestBuilder: CaptureRequest.Builder) {
-        logNyan()
+        lognyan()
         if (flashSupported) {
             requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH)
@@ -898,11 +1006,10 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
         fun newInstance(): Camera2BasicFragment = Camera2BasicFragment()
     }
 
-    fun logNyan() {
+    private fun lognyan() {
         Log.d("tag", Thread.currentThread().stackTrace[3].methodName)
     }
 
-    //아래 3개 posenet
     private fun cropBitmap(bitmap: Bitmap): Bitmap {
         val bitmapRatio = bitmap.height.toFloat() / bitmap.width
         val modelInputRatio = 257.toFloat() / 257
@@ -940,7 +1047,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
     }
 
     //파일에서 프로세싱
-    private fun processImage(bitmap: Bitmap) {
+    private fun processImage(bitmap: Bitmap) : Person {
         // Crop bitmap.
         val croppedBitmap = cropBitmap(bitmap)
 
@@ -959,6 +1066,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
                     "우귀 ${person.keyPoints[4].position.x},${person.keyPoints[4].position.y}\n") // 그럼 뭐가 나오겠지
             else -> Log.d("file","인식불가 : ${person.score}")
         }
+        return person
     }
 
     //프리뷰에서 프로세싱
@@ -989,7 +1097,7 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
     inner class ThreadClass : Thread() {
         override fun run(){
             Log.d("thread2","run(start)")
-            while(isThread2Work){
+            while(isPIThreadWork){
                 //프리뷰에서 이미지 갖고와서
                 val sampleBitmap = textureView.getBitmap()
                 try{
@@ -998,12 +1106,12 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
                         val posenet = Posenet(this@Camera2BasicFragment.context) // 모델 인스턴스 만들고
                         val person = posenet.estimateSinglePose(processedImage) // 추측을 해본다
                         previewPersonMessage =
-                            "점수 ${person.score}\n"+
-                            "코오 ${person.keyPoints[0].position.x},${person.keyPoints[0].position.y}\n"+
-                            "좌눈 ${person.keyPoints[1].position.x},${person.keyPoints[1].position.y}\n"+
-                            "우눈 ${person.keyPoints[2].position.x},${person.keyPoints[2].position.y}\n"+
-                            "좌귀 ${person.keyPoints[3].position.x},${person.keyPoints[3].position.y}\n"+
-                            "우귀 ${person.keyPoints[4].position.x},${person.keyPoints[4].position.y}\n"
+                                "점수 ${person.score}\n"+
+                                        "코오 ${person.keyPoints[0].position.x},${person.keyPoints[0].position.y}\n"+
+                                        "좌눈 ${person.keyPoints[1].position.x},${person.keyPoints[1].position.y}\n"+
+                                        "우눈 ${person.keyPoints[2].position.x},${person.keyPoints[2].position.y}\n"+
+                                        "좌귀 ${person.keyPoints[3].position.x},${person.keyPoints[3].position.y}\n"+
+                                        "우귀 ${person.keyPoints[4].position.x},${person.keyPoints[4].position.y}\n"
                         when(person.score){
                             in 0.3..1.0 -> {
                                 Log.d("thread2",previewPersonMessage)
@@ -1011,9 +1119,14 @@ class Camera2BasicFragment : Fragment(), View.OnClickListener,
                             else -> Log.d("thread2","인식불가 : ${person.score}")
                         }
                         //텍뷰에 메시지 뽈롱
-                        var msg = pvHandler.obtainMessage()
+                        val msg = previewHandler.obtainMessage()
                         msg.obj = previewPersonMessage
-                        pvHandler.sendMessage(msg)
+                        previewHandler.sendMessage(msg)
+
+                        //추정한 결과를 바탕으로 프리뷰 화면에 수염 선글라스 기타등등을 그려야함
+
+                        // 캔버스 오브젝트 소환 : 그 위에다가 Drawable에서 가져온 것을 그리자
+
                     }
                 }
                 catch (e:Exception){

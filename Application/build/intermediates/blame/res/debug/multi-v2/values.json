@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\FOYJUN2\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
+            "outputFile": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\joyfun_Foyjun\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Y190313\\.gradle\\caches\\transforms-2\\files-2.1\\7321308d8c0294ef5e1ce214e454529b\\support-compat-26.1.0\\res\\values\\values.xml",
@@ -20,6 +20,42 @@
                         "endLines": "51,52,148,149,150,151,152,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,187,188,194,195,199,200,201,207,257,1522,1526,1528,1534,1536,1674,1675,1757,1761",
                         "endColumns": "68,62,69,67,71,69,60,60,60,61,63,61,60,67,99,59,65,72,68,56,51,61,71,75,34,34,33,34,34,69,70,116,12,109,12,128,71,66,35,115",
                         "endOffsets": "3380,3443,10064,10132,10204,10274,10335,11277,11338,11400,11464,11526,11587,11655,11755,11815,11881,11954,12023,12080,12132,12194,12719,12795,13069,13104,13280,13315,13350,13695,16827,100744,100945,101121,101505,101700,112665,112732,126082,126355"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\joyfun_Foyjun\\Application\\src\\main\\res\\values\\dimens.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "57,103",
+                        "endColumns": "44,51",
+                        "endOffsets": "97,150"
+                    },
+                    "to": {
+                        "startLines": "155,163",
+                        "startColumns": "4,4",
+                        "startOffsets": "10513,11169",
+                        "endColumns": "44,51",
+                        "endOffsets": "10553,11216"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\joyfun_Foyjun\\Application\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "16,22,18,23,17,19,20,21",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "661,1090,751,1174,706,802,887,988",
+                        "endLines": "16,22,18,32,17,19,20,21",
+                        "endColumns": "43,82,49,13,43,83,99,100",
+                        "endOffsets": "700,1168,796,1442,745,881,982,1084"
+                    },
+                    "to": {
+                        "startLines": "239,240,241,242,252,253,254,255",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "15938,15982,16065,16115,16379,16423,16507,16607",
+                        "endLines": "239,240,241,251,252,253,254,255",
+                        "endColumns": "43,82,49,13,43,83,99,100",
+                        "endOffsets": "15977,16060,16110,16374,16418,16502,16602,16703"
                     }
                 },
                 {
@@ -42,7 +78,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\FOYJUN2\\Application\\src\\main\\res\\values\\styles.xml",
+                    "source": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\joyfun_Foyjun\\Application\\src\\main\\res\\values\\styles.xml",
                     "from": {
                         "startLines": "17",
                         "startColumns": "4",
@@ -61,7 +97,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\FOYJUN2\\Application\\src\\main\\res\\values\\colors.xml",
+                    "source": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\joyfun_Foyjun\\Application\\src\\main\\res\\values\\colors.xml",
                     "from": {
                         "startLines": "17",
                         "startColumns": "4",
@@ -75,42 +111,6 @@
                         "startOffsets": "1974",
                         "endColumns": "54",
                         "endOffsets": "2024"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\FOYJUN2\\Application\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "16,22,18,23,17,19,20,21",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "661,1090,751,1174,706,802,887,988",
-                        "endLines": "16,22,18,32,17,19,20,21",
-                        "endColumns": "43,82,49,13,43,83,99,100",
-                        "endOffsets": "700,1168,796,1442,745,881,982,1084"
-                    },
-                    "to": {
-                        "startLines": "239,240,241,242,252,253,254,255",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "15938,15982,16065,16115,16379,16423,16507,16607",
-                        "endLines": "239,240,241,251,252,253,254,255",
-                        "endColumns": "43,82,49,13,43,83,99,100",
-                        "endOffsets": "15977,16060,16110,16374,16418,16502,16602,16703"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\FOYJUN2\\Application\\src\\main\\res\\values\\dimens.xml",
-                    "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "57,103",
-                        "endColumns": "44,51",
-                        "endOffsets": "97,150"
-                    },
-                    "to": {
-                        "startLines": "155,163",
-                        "startColumns": "4,4",
-                        "startOffsets": "10513,11169",
-                        "endColumns": "44,51",
-                        "endOffsets": "10553,11216"
                     }
                 },
                 {

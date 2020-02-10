@@ -553,8 +553,11 @@ drawable abc_textfield_search_default_mtrl_alpha
 drawable abc_textfield_search_material
 drawable abc_vector_test
 drawable foyjunlogo
+drawable foyjunlogo1of4
 drawable ic_action_info
 drawable ic_launcher
+drawable mustache
+drawable mustache_mini
 drawable notification_action_background
 drawable notification_bg
 drawable notification_bg_low
@@ -567,6 +570,8 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable sunglasses
+drawable sunglasses_mini
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
 id ALT
@@ -637,6 +642,7 @@ id media_actions
 id message
 id middle
 id multiply
+id mustache
 id never
 id none
 id normal
@@ -677,6 +683,7 @@ id src_over
 id status_bar_latest_event_content
 id submenuarrow
 id submit_area
+id sunglasses
 id tabMode
 id text
 id text2

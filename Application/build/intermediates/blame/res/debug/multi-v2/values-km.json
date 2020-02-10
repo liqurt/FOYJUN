@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\FOYJUN2\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-km\\values-km.xml",
+            "outputFile": "C:\\Users\\Y190313\\Desktop\\Apocrypha\\JOYFUN\\joyfun_Foyjun\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-km\\values-km.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Y190313\\.gradle\\caches\\transforms-2\\files-2.1\\adfe10cf2b0ef8601066c19d564f4e1b\\appcompat-v7-26.1.0\\res\\values-km\\values-km.xml",

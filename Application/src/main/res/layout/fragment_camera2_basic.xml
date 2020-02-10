@@ -40,22 +40,27 @@
             android:layout_gravity="center"
             android:background="@drawable/foyjunlogo"/>
 
-        <ImageButton
-            android:id="@+id/info"
-            style="@android:style/Widget.Material.Light.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:contentDescription="@string/description_info"
-            android:padding="@dimen/image_button_padding"
-            android:src="@drawable/ic_action_info" />
-
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="짬뽕밥"
             android:textColor="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/sunglasses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:src="@drawable/sunglasses_mini"/>
+
+        <ImageButton
+            android:id="@+id/mustache"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/mustache_mini"/>
+
 
     </FrameLayout>
 

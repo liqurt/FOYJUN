@@ -22,3 +22,4 @@ package com.example.android.foyjun
 @JvmField val REQUEST_READ_EXTERNAL_STORAGE_PERMISSION = 2
 @JvmField val REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION = 3
 @JvmField val PIC_FILE_NAME = "pic.jpg"
+@JvmField val PIC_FILE_NAME2 = "pic2.jpg"
