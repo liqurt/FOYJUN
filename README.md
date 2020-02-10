@@ -9,6 +9,6 @@ please checkout my blog for further information(https://blog.naver.com/liqurt)
   <p>Normal potato</p>
   <img width="480" src="https://user-images.githubusercontent.com/26222049/74128212-f9fc9a80-4c1f-11ea-86f1-78c96e169dfe.jpg">
   
-  <p>Make potato pretty</p>
+  <p>\nMake potato pretty</p>
   <img width="480" src="https://user-images.githubusercontent.com/26222049/74128221-fbc65e00-4c1f-11ea-94f9-8f62e5dc0e5a.jpg">
   </div>
