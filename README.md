@@ -1,18 +1,21 @@
-I refer to  Android Camera2Basic Sample and TensorFlow Lite PoseNet Android Demo for this project
+# Foyjun
+- 가천대 소프트웨어학과-조이펀 2020 산학연계인턴
 
-Goal is making synthesized picture like SNOW, running tflite model in Android
+### 주제
+- 얼굴을 인식해 스티커 사진을 찍는 애플리케이션
 
-Cause I am a student, focusing to study something and that's Kotlin
+### 사용언어
+- Kotlin
 
-please checkout my blog for further information(https://blog.naver.com/liqurt)
+### 참고 링크
+- https://blog.naver.com/liqurt (개발 과정)
 
-[Screenshot]
+### 사용 예(스크린샷)
 <div>
-  <p>Normal potato</p>
+  <p>원본</p>
   <img width="480" src="https://user-images.githubusercontent.com/26222049/74128212-f9fc9a80-4c1f-11ea-86f1-78c96e169dfe.jpg">
   
-  
-  
-  <p>Make potato pretty</p>
+  <p>스티커 사진</p>
   <img width="480" src="https://user-images.githubusercontent.com/26222049/74128221-fbc65e00-4c1f-11ea-94f9-8f62e5dc0e5a.jpg">
   </div>
+  
