@@ -8,7 +8,7 @@
 - Kotlin
 
 ### 참고 링크
-- https://blog.naver.com/liqurt (개발 과정)
+- https://blog.naver.com/liqurt/221763078943 (개발 과정)
 
 ### 사용 예(스크린샷)
 <div>
